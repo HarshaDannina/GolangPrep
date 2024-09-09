@@ -108,7 +108,7 @@ func main() {
 		Color: "black",
 		Engine: Engine{ // Embeded Struct
 			Stroke:   4,
-			Cylender: "v8",
+			Cylinder: "v8",
 		},
 		BackWheel: Wheel{},
 	}
@@ -122,7 +122,8 @@ func main() {
 	}
 
 	fmt.Println(myCar)
-	fmt.Println(myCar.Stroke)
+	// Struct method
+	fmt.Println(myCar.printInfo())
 
 }
 
@@ -161,10 +162,16 @@ type Car struct {
 
 type Engine struct {
 	Stroke   int
-	Cylender string
+	Cylinder string
 }
 
 type Wheel struct {
 	Radius   int
 	Material string
+}
+
+// Struct Methods
+func (car Car) printInfo() string {
+	return fmt.Sprintf("{Color: %s, Engine: {Stroke: %v, Cylinder: %s}, Front Wheel: {Radius: %v, Material: %s}, Back Wheel: {Radius: %v, Material: %s}}",
+		car.Color, car.Stroke, car.Cylinder, car.FrontWheel.Radius, car.FrontWheel.Material, car.BackWheel.Radius, car.BackWheel.Material)
 }
