@@ -9,7 +9,7 @@ func main() {
 	// ****************
 	// CHAPTER-1: Variables
 	// ****************
-
+	fmt.Println("### CH-1: Variables")
 	// Boolean
 	var a bool
 	// Whole Numbers
@@ -69,15 +69,15 @@ func main() {
 
 	fmt.Println(area)
 	var score float64 = 89.9999999999
-	msg := fmt.Sprintf("Hi %s, Congrats!, Your score is %.3f", "Praveen", score)
-	fmt.Println(msg)
+	str := fmt.Sprintf("Hi %s, Congrats!, Your score is %.3f", "Praveen", score)
+	fmt.Println(str)
 
 	// Conditional Operators
 	// == equals to
 	// != not equal to
 	// < less than
 	// > greater than
-
+	fmt.Println("## Conditional Operators")
 	if score >= 90 {
 		fmt.Println("Selected")
 	} else if score > 60 {
@@ -95,6 +95,7 @@ func main() {
 	}
 
 	// Functions
+	fmt.Println("### CH-2: Functions")
 	addition := add(1, 2)
 	subtraction := sub(2, 1)
 	multiplication, division, err := muldiv(1, 0)
@@ -104,6 +105,7 @@ func main() {
 	fmt.Printf("%v %v %v %f\n", addition, subtraction, multiplication, division)
 
 	// Struct
+	fmt.Println("### CH-3: Structs")
 	myCar := Car{
 		Color: "black",
 		Engine: Engine{ // Embeded Struct
@@ -123,8 +125,38 @@ func main() {
 
 	fmt.Println(myCar)
 	// Struct method
+	fmt.Println("## Struct Method")
 	fmt.Println(myCar.printInfo())
 
+	// Interfaces
+	fmt.Println("### CH-4: Interface")
+	post := postNotification{
+		postId: 1,
+		userId: 2,
+	}
+
+	msg := messageNotification{
+		senderId: 1,
+		message:  "Hello",
+	}
+
+	sendNotification(post)
+	sendNotification(msg)
+
+	// Multiple Interfaces
+	fmt.Println("## Multiple Interfaces")
+	openApp(post, post)
+	openApp(msg, msg)
+
+	// Type Assertions
+	fmt.Println("## Type Assertions")
+	printNotification(post)
+	printNotification(msg)
+
+	fmt.Println("## Type Switches")
+	checkNotification(post)
+	checkNotification(msg)
+	checkNotification(nil)
 }
 
 // ****************
@@ -174,4 +206,76 @@ type Wheel struct {
 func (car Car) printInfo() string {
 	return fmt.Sprintf("{Color: %s, Engine: {Stroke: %v, Cylinder: %s}, Front Wheel: {Radius: %v, Material: %s}, Back Wheel: {Radius: %v, Material: %s}}",
 		car.Color, car.Stroke, car.Cylinder, car.FrontWheel.Radius, car.FrontWheel.Material, car.BackWheel.Radius, car.BackWheel.Material)
+}
+
+// ****************
+// CHAPTER-4: Interface
+// ****************
+
+type notification interface {
+	pushNotification() string
+}
+
+type postNotification struct {
+	postId int
+	userId int
+}
+
+type messageNotification struct {
+	senderId int
+	message  string
+}
+
+func (notify postNotification) pushNotification() string {
+	return fmt.Sprintf("%v liked your post %v", notify.userId, notify.postId)
+}
+
+func (notify messageNotification) pushNotification() string {
+	return fmt.Sprintf("%v sent a message: %s", notify.senderId, notify.message)
+}
+
+func sendNotification(notify notification) {
+	fmt.Println(notify.pushNotification())
+}
+
+// Multiple interfaces
+type clickHandler interface {
+	onClick() string
+}
+
+func (notify postNotification) onClick() string {
+	return fmt.Sprintf("Open post %v", notify.postId)
+}
+
+func (notify messageNotification) onClick() string {
+	return fmt.Sprintf("Open chat with user %v", notify.senderId)
+}
+
+func openApp(n notification, c clickHandler) {
+	fmt.Println("Notification -> ", n.pushNotification())
+	fmt.Println("OnClick -> ", c.onClick())
+}
+
+// Type Assertions
+func printNotification(n notification) {
+	p, ok := n.(postNotification)
+	if ok {
+		fmt.Println(p.pushNotification())
+	}
+	m, ok := n.(messageNotification)
+	if ok {
+		fmt.Println(m.pushNotification())
+	}
+}
+
+// Type Switches
+func checkNotification(n notification) {
+	switch s := n.(type) {
+	case postNotification:
+		fmt.Println("You got a like from user:", s.userId)
+	case messageNotification:
+		fmt.Println("You got a message from user:", s.senderId)
+	default:
+		fmt.Println("You didnot received any notification")
+	}
 }
