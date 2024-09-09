@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 func main() {
 
@@ -157,6 +160,26 @@ func main() {
 	checkNotification(post)
 	checkNotification(msg)
 	checkNotification(nil)
+
+	// Error Handling
+	fmt.Println("### CH-5: Error Handling")
+	costOfMessage, err := messengerCost("Hi", "Hello")
+	fmt.Println(costOfMessage, err)
+
+	costOfMessage, err = messengerCost("Hi, where are you staying", "Mysore")
+	fmt.Println(costOfMessage, err)
+
+	costOfMessage, err = messengerCost("Hi, where are you staying", "I am staying in Mysore")
+	fmt.Println(costOfMessage, err)
+
+	// Error Interface
+	fmt.Println("## Error Interface")
+	quo, err := divide(10.0, 0.0)
+	fmt.Println(quo, err)
+	// errors package
+	quo, err = divideStandard(10.0, 0.0)
+	fmt.Println(quo, err)
+
 }
 
 // ****************
@@ -278,4 +301,57 @@ func checkNotification(n notification) {
 	default:
 		fmt.Println("You didnot received any notification")
 	}
+}
+
+// ****************
+// CHAPTER-5: Error Handling
+// ****************
+
+func sendSMS(message string) (float64, error) {
+	const maxLen = 10
+	const costPerChar = 0.01
+	if len(message) > maxLen {
+		return 0.0, fmt.Errorf("Failed, your text is over %v characters", len(message)-maxLen)
+	}
+	return float64(len(message)) * costPerChar, nil
+}
+
+func messengerCost(msgFromA, msgFromB string) (float64, error) {
+	costOfA, errA := sendSMS(msgFromA)
+	costOfB, errB := sendSMS(msgFromB)
+	if errA != nil && errB != nil {
+		return 0.0, fmt.Errorf("Message from A %s; Message from B %s", errA.Error(), errB.Error())
+	} else if errA != nil {
+		return costOfB, fmt.Errorf("Message from A %s", errA)
+	} else if errB != nil {
+		return costOfA, fmt.Errorf("Message from B %s", errB)
+	} else {
+		return costOfA + costOfB, nil
+	}
+}
+
+// Error Interface
+type NotDividedByZeroError struct {
+	dividend float64
+}
+
+func (e NotDividedByZeroError) Error() string {
+	return fmt.Sprintf("Cannot divide %v by 0", e.dividend)
+}
+
+func divide(a, b float64) (float64, error) {
+	if b == 0 {
+		return 0.0, NotDividedByZeroError{dividend: a}
+	}
+	return a / b, nil
+}
+
+// Using errors Package
+var standardError error = errors.New("This is a standard Zero Division error")
+
+func divideStandard(a, b float64) (float64, error) {
+	if b == 0 {
+		return 0.0, standardError
+	}
+	return a / b, nil
 }
