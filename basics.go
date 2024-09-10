@@ -12,7 +12,7 @@ func main() {
 	// ****************
 	// CHAPTER-1: Variables
 	// ****************
-	fmt.Println("### CH-1: Variables")
+	fmt.Println("**************** CH-1: Variables ****************")
 	// Boolean
 	var a bool
 	// Whole Numbers
@@ -98,7 +98,7 @@ func main() {
 	}
 
 	// Functions
-	fmt.Println("### CH-2: Functions")
+	fmt.Println("**************** CH-2: Functions ****************")
 	addition := add(1, 2)
 	subtraction := sub(2, 1)
 	multiplication, division, err := muldiv(1, 0)
@@ -132,7 +132,7 @@ func main() {
 	fmt.Println(myCar.printInfo())
 
 	// Interfaces
-	fmt.Println("### CH-4: Interface")
+	fmt.Println("**************** CH-4: Interface ****************")
 	post := postNotification{
 		postId: 1,
 		userId: 2,
@@ -162,7 +162,7 @@ func main() {
 	checkNotification(nil)
 
 	// Error Handling
-	fmt.Println("### CH-5: Error Handling")
+	fmt.Println("**************** CH-5: Error Handling ****************")
 	costOfMessage, err := messengerCost("Hi", "Hello")
 	fmt.Println(costOfMessage, err)
 
@@ -179,6 +179,50 @@ func main() {
 	// errors package
 	quo, err = divideStandard(10.0, 0.0)
 	fmt.Println(quo, err)
+
+	// Pointers
+	fmt.Println("**************** CH-6: Pointers ****************")
+	str1 := "Hello"
+	str1Ptr := &str1
+	fmt.Println(str1Ptr)
+	str1 = "World"
+	var str1Ptr2 *string = &str1
+	fmt.Println(str1Ptr2)
+
+	arr := [...]int{1, 2, 3, 4, 5}
+	arr1Ptr := &arr
+	fmt.Println(arr1Ptr[0])
+
+	num1 := 5
+	fmt.Println(num1)
+	changeNumber(&num1)
+	fmt.Println(num1)
+
+	// Loops
+	fmt.Println("**************** CH-7: Loops ****************")
+	loop1(5)
+	loop2(5)
+	loop3(5)
+	loop4(5)
+	loop5(5)
+
+	// Arrays / Slices
+	fmt.Println("**************** CH-8: Arrays / Slices ****************")
+	arr1 := generateArray(4)
+	fmt.Println(arr1)
+	fmt.Println("## Slices")
+	slice1, slice2, slice3 := generateSlice(5, 10)
+	fmt.Println(slice1, slice2, slice3)
+
+	slicedArray, err := sliceArray(4)
+	fmt.Println(slicedArray, err)
+	slicedArray, err = sliceArray(6)
+	fmt.Println(slicedArray, err)
+
+	fmt.Println(addingToSlice([]int{1, 2, 3}, 4, 5, 6))
+
+	fmt.Println("## Variadic")
+	fmt.Println(variadicSum(1, 2, 3, 4, 5))
 
 }
 
@@ -354,4 +398,106 @@ func divideStandard(a, b float64) (float64, error) {
 		return 0.0, standardError
 	}
 	return a / b, nil
+}
+
+// ****************
+// CHAPTER-6: Pointers
+// ****************
+
+func changeNumber(num *int) {
+	*num = 10
+}
+
+// ****************
+// CHAPTER-7: Loops
+// ****************
+
+func loop1(n int) {
+	for i := 0; i < n; i++ {
+		fmt.Println(i)
+	}
+}
+
+func loop2(n int) {
+	for i, j := 0, 1; i < n && j < n; i, j = i+1, j+1 {
+		fmt.Println(i, j)
+	}
+}
+
+func loop3(budget float64) {
+	totalCost := 0.0
+	for i := 0; ; i++ {
+		totalCost += 1.0 + (0.01 * float64(i))
+		if totalCost > budget {
+			fmt.Printf("Possible number of messages to send: %v\n", i)
+			return
+		}
+	}
+}
+
+func loop4(n int) {
+	for n > 0 {
+		fmt.Println(n)
+		n--
+	}
+}
+
+func loop5(n int) {
+	n = n + 1
+	for {
+		n--
+		if n == 0 {
+			break
+		}
+		if n%2 == 0 {
+			continue
+		}
+		fmt.Println(n)
+	}
+}
+
+// ****************
+// CHAPTER-8: Arrays/Slices
+// ****************
+
+func generateArray(n int) [5]int {
+	var arr1 [5]int
+	n = n + 1
+	for i := 0; i < n; i++ {
+		arr1[i] = i
+	}
+	return arr1
+}
+
+func generateSlice(length, capacity int) (slice1, slice2, slice3 []int) {
+	slice1 = make([]int, length, capacity)
+	slice2 = make([]int, length)
+	slice3 = []int{1, 2, 3, 4, 5}
+	return
+}
+func sliceArray(n int) ([]int, error) {
+	arr := [5]int{1, 2, 3, 4, 5}
+	if n < len(arr) {
+		return arr[:n], nil
+	}
+	return nil, errors.New("Index Out of bounds")
+}
+
+func variadicSum(nums ...int) (sum int) {
+	sum = 0
+	for _, v := range nums {
+		sum += v
+	}
+	return
+}
+
+func addingToSlice(slice1 []int, nums ...int) []int {
+	slice1 = append(slice1, nums[0])
+	if len(nums) > 2 {
+		slice1 = append(slice1, nums[1], nums[2])
+	}
+	if len(nums) > 3 {
+		slice1 = append(slice1, nums[3:]...)
+	}
+	return slice1
 }
