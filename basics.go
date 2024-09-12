@@ -224,6 +224,11 @@ func main() {
 	fmt.Println("## Variadic")
 	fmt.Println(variadicSum(1, 2, 3, 4, 5))
 
+	fmt.Println("## Append")
+	fmt.Println(appendCostPerDay([]costs{{0, 4.0}, {1, 2.1}, {1, 3.1}, {5, 2.5}}))
+
+	fmt.Println(createMatrix(5))
+
 }
 
 // ****************
@@ -500,4 +505,32 @@ func addingToSlice(slice1 []int, nums ...int) []int {
 		slice1 = append(slice1, nums[3:]...)
 	}
 	return slice1
+}
+
+type costs struct {
+	day  int
+	cost float64
+}
+
+func appendCostPerDay(costs []costs) []float64 {
+	ans := []float64{}
+	for i := 0; i < len(costs); i++ {
+		for costs[i].day >= len(ans) {
+			ans = append(ans, 0.0)
+		}
+		ans[costs[i].day] += costs[i].cost
+	}
+	return ans
+}
+
+func createMatrix(n int) [][]int {
+	mat := make([][]int, 0)
+	for i := 0; i < n; i++ {
+		row := make([]int, 0)
+		for j := 0; j < n; j++ {
+			row = append(row, i*j)
+		}
+		mat = append(mat, row)
+	}
+	return mat
 }
