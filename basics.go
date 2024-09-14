@@ -3,6 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
+	"math"
+	"strconv"
+	"sync"
+	"time"
 )
 
 func main() {
@@ -72,7 +76,7 @@ func main() {
 
 	fmt.Println(area)
 	var score float64 = 89.9999999999
-	str := fmt.Sprintf("Hi %s, Congrats!, Your score is %.3f", "Praveen", score)
+	str := fmt.Sprintf("Hi, Congrats!, Your score is %.3f", score)
 	fmt.Println(str)
 
 	// Conditional Operators
@@ -229,6 +233,111 @@ func main() {
 
 	fmt.Println(createMatrix(5))
 
+	// Maps
+	fmt.Println("**************** CH-9: Maps ****************")
+	occr := countOccurances("This is a test")
+	fmt.Println(occr)
+	deleteLeastOccurance(occr)
+	fmt.Println(occr)
+
+	// Advance Functions
+	fmt.Println("**************** CH-10: Advance Functions ****************")
+	msgs := []string{"This is regarding your work", "This is regarding your leave", "This is regarding your home"}
+	fmt.Println(messageFormatter(msgs, formatString))
+
+	// Currying
+	fmt.Println("## Currying")
+	square := doMath(multiplyNumbers)
+	double := doMath(addNumbers)
+
+	fmt.Println(square(5))
+	fmt.Println(double(5))
+
+	// defer
+	fmt.Println("## Defer")
+	users := map[string]User{
+		"John": {name: "John", admin: false},
+		"Kate": {name: "Kate", admin: true},
+		"Ken":  {name: "Ken", admin: false},
+	}
+	fmt.Println(deleteUser(users, "John"))
+	fmt.Println(deleteUser(users, "Kate"))
+
+	//clouser
+	fmt.Println("## Clousers")
+	builder := stringBuilder()
+	builder("This")
+	builder("is")
+	builder("a")
+	builder("broken")
+	builder("message")
+	fmt.Println(builder(""))
+
+	// Anonymous Functions
+	fmt.Println("## Anonymous Functions")
+	fmt.Println(calculateCostOfMessages([]string{"Hi", "How are you", "Thank you"}, func(s string) float64 {
+		cost := 0.0
+		for i := 0; i < len(s); i++ {
+			cost += 0.01
+		}
+		return cost
+	}))
+
+	// Concurrency
+	fmt.Println("**************** CH-11: Concurrency / Channel ****************")
+	sendEmail("Hello")
+	sendEmail("Hi")
+	sendEmail("Thanks")
+
+	// Channel
+	fmt.Println("## Channel")
+	sendEmailUsingChannel("Hello")
+	isEmailSent := <-emailSentChannel // to capture channel output
+	fmt.Println(isEmailSent)
+	sendEmailUsingChannel("Hi")
+	<-emailSentChannel // when channel output was not needed
+	sendEmailUsingChannel("Thanks")
+	<-emailSentChannel
+	close(emailSentChannel) // closing a channel
+	printFibonacci(10)      // channel using range
+	messageChannel := make(chan string)
+	emailChannel := make(chan string)
+	createNotification(messageChannel, emailChannel)
+	showNotifications(messageChannel, emailChannel)
+
+	// Mutexes
+	fmt.Println("**************** CH-12: Mutexes ****************")
+	doTransactions(userBalance{balance: 50.0, mux: &sync.RWMutex{}})
+
+	// Generic
+	fmt.Println("**************** CH-13: Generic ****************")
+	fmt.Println(splitAnySlice([]int{1, 2, 3, 4, 5}, 3))
+	fmt.Println(splitAnySlice([]float64{1, 2, 3, 4, 5}, 4))
+	fmt.Println(splitAnySlice([]string{"1", "2", "3", "4", "5"}, 5))
+
+	fmt.Printf("%v\n", findLeastValueKey(map[int]int{
+		1: 10,
+		2: 40,
+		3: 20,
+		4: 5,
+		5: 30,
+	}))
+
+	fmt.Printf("%v\n", findLeastValueKey(map[string]int{
+		"a": 10,
+		"b": 40,
+		"c": 20,
+		"d": 5,
+		"e": 30,
+	}))
+
+	fmt.Printf("%v\n", findLeastValueKey(map[float64]int{
+		1.0: 10,
+		2.0: 40,
+		3.0: 20,
+		4.0: 50,
+		5.0: 30,
+	}))
 }
 
 // ****************
@@ -533,4 +642,264 @@ func createMatrix(n int) [][]int {
 		mat = append(mat, row)
 	}
 	return mat
+}
+
+// ****************
+// CHAPTER-9: Maps
+// ****************
+
+func countOccurances(chars string) map[rune]int {
+	charMap := make(map[rune]int)
+	for _, char := range chars {
+		ch := rune(char)
+		occr, ok := charMap[ch]
+		if ok {
+			charMap[ch] = occr + 1
+		} else {
+			charMap[ch] = 1
+		}
+	}
+	return charMap
+}
+
+func deleteLeastOccurance(charMap map[rune]int) {
+	leastOccr := 10
+	for _, v := range charMap {
+		if v < leastOccr {
+			leastOccr = v
+		}
+	}
+	for k, v := range charMap {
+		if v == leastOccr {
+			delete(charMap, k)
+		}
+	}
+}
+
+// ****************
+// CHAPTER-10: Advance Functions
+// ****************
+
+// Higher Order Function
+func messageFormatter(msgs []string, formatter func(string) string) []string {
+	newMsgs := make([]string, len(msgs))
+	for _, msg := range msgs {
+		newMsgs = append(newMsgs, formatter(msg))
+	}
+	return newMsgs
+}
+
+// First Class Function
+func formatString(str string) string {
+	return fmt.Sprintf("Hello!\n%s\nRegards\n", str)
+}
+
+// Currying
+func addNumbers(x, y int) int {
+	return x + y
+}
+
+func multiplyNumbers(x, y int) int {
+	return x * y
+}
+
+func doMath(calculate func(int, int) int) func(int) int {
+	return func(x int) int {
+		return calculate(x, x)
+	}
+}
+
+type User struct {
+	name  string
+	admin bool
+}
+
+// defer - do something before the function ends - closing files, db connections
+// multiple defer in same functions executes bottom-up order
+func deleteUser(users map[string]User, name string) string {
+	defer delete(users, name)
+	if user, ok := users[name]; ok {
+		if user.admin {
+			return fmt.Sprintf("admin %s is deleted", name)
+		} else {
+			return fmt.Sprintf("user %s is deleted", name)
+		}
+	}
+	return fmt.Sprintf("user %s not found", name)
+
+}
+
+// Clouser - A variable enclosed in a function
+func stringBuilder() func(string) string {
+	str := ""
+	return func(word string) string {
+		str += word + " "
+		return str
+	}
+}
+
+// Anonymous Function
+func calculateCostOfMessages(msgs []string, cost func(string) float64) float64 {
+	totalCost := 0.0
+	for _, msg := range msgs {
+		totalCost += cost(msg)
+	}
+	return totalCost
+}
+
+// ****************
+// CHAPTER-11: Concurrency
+// ****************
+
+func sendEmail(message string) {
+	go func() { // this won't get printed bcz program exits before go routine ends
+		time.Sleep(time.Millisecond * 1000)
+		fmt.Printf("Email received: %s\n", message)
+	}()
+	fmt.Printf("Email sent: %s\n", message)
+}
+
+// Channel
+var emailSentChannel = make(chan bool)
+
+func sendEmailUsingChannel(message string) {
+	go func() {
+		time.Sleep(time.Millisecond * 250)
+		fmt.Printf("Email received: %s\n", message)
+		emailSentChannel <- true
+	}()
+	fmt.Printf("Email sent: %s\n", message)
+}
+
+// Channel with range
+func fibonacci(n int, ch chan int) {
+	x, y := 0, 1
+	for i := 0; i < n; i++ {
+		ch <- x
+		x, y = y, x+y
+	}
+	close(ch)
+}
+
+func printFibonacci(n int) {
+	ch := make(chan int)
+	go func() {
+		fibonacci(n, ch)
+	}()
+	fmt.Println("Fibonacci numbers")
+	for num := range ch {
+		fmt.Println(num)
+	}
+}
+
+// Select - listening to multiple channels
+func createNotification(messages, emails chan string) {
+	go func() {
+		for i := 0; i < 10; i++ {
+			messages <- "message-" + strconv.Itoa(i)
+			emails <- "email-" + strconv.Itoa(i)
+			time.Sleep(time.Second)
+		}
+		close(messages)
+		close(emails)
+	}()
+}
+func showNotifications(messages, emails chan string) {
+	for {
+		select {
+		case msg, ok := <-messages:
+			if !ok {
+				return
+			}
+			fmt.Printf("New message: %s\n", msg)
+		case email, ok := <-emails:
+			if !ok {
+				return
+			}
+			fmt.Printf("New email: %s\n", email)
+		}
+	}
+}
+
+// ****************
+// CHAPTER-12: Mutexes
+// ****************
+
+type userBalance struct {
+	balance float64
+	mux     *sync.RWMutex
+}
+
+func (ub *userBalance) credit(val float64) {
+	ub.mux.Lock()
+	defer ub.mux.Unlock()
+	ub.balance += val
+	time.Sleep(time.Second)
+}
+
+func (ub *userBalance) debit(val float64) {
+	ub.mux.Lock()
+	defer ub.mux.Unlock()
+	ub.balance -= val
+	time.Sleep(time.Second)
+}
+
+func (ub *userBalance) enquiry() {
+	ub.mux.RLock()
+	defer ub.mux.RUnlock()
+	fmt.Println(ub.balance)
+}
+
+func doTransactions(ub userBalance) {
+	var wb sync.WaitGroup
+	for i := 0; i < 10; i++ {
+		wb.Add(1)
+		go func() {
+			ub.credit(10)
+			fmt.Println("Balance Credit Enquiry: ")
+			ub.enquiry()
+			wb.Done()
+		}()
+	}
+	for i := 0; i < 10; i++ {
+		wb.Add(1)
+		go func() {
+			ub.debit(5)
+			fmt.Println("Balance Debit Enquiry: ")
+			ub.enquiry()
+			wb.Done()
+		}()
+	}
+	wb.Wait()
+}
+
+// ****************
+// CHAPTER-13: Generics
+// ****************
+
+func splitAnySlice[T any](slice1 []T, n int) ([]T, []T, error) {
+	var zeroVal []T
+	if len(slice1) < n {
+		return zeroVal, zeroVal, fmt.Errorf("Out of bounds")
+	}
+	if len(slice1) == 0 {
+		return zeroVal, zeroVal, nil
+	}
+	return slice1[:n], slice1[n:], nil
+}
+
+type comparable interface {
+	int | float64 | string
+}
+
+func findLeastValueKey[T comparable](m map[T]int) T {
+	least := math.MaxInt
+	var key T
+	for k, v := range m {
+		if least > v {
+			least = v
+			key = k
+		}
+	}
+	return key
 }
