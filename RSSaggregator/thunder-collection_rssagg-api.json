@@ -1,0 +1,158 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "rssagg-api",
+    "collectionId": "642a454e-1e54-41a1-b5bb-a1bed9c2e306",
+    "dateExported": "2024-09-15T17:12:22.735Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "fc454afe-3e2e-4ed3-8e9c-a68ff988cdff",
+            "colId": "642a454e-1e54-41a1-b5bb-a1bed9c2e306",
+            "containerId": "",
+            "name": "Create User",
+            "url": "http://localhost:8000/v1/user",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-09-15T12:10:08.111Z",
+            "modified": "2024-09-15T17:06:02.876Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Drake\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "2ffc8122-10d8-4442-ae22-f278ca0490e1",
+            "colId": "642a454e-1e54-41a1-b5bb-a1bed9c2e306",
+            "containerId": "",
+            "name": "Get User",
+            "url": "http://localhost:8000/v1/user",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-09-15T12:11:24.284Z",
+            "modified": "2024-09-15T12:12:02.029Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "ApiKey cc068039c38fe166dae901f86e5459d8314a90e95a9b2dfc28821968415c44cd"
+                }
+            ]
+        },
+        {
+            "_id": "e372b871-516e-4851-b324-c9b38ffac692",
+            "colId": "642a454e-1e54-41a1-b5bb-a1bed9c2e306",
+            "containerId": "",
+            "name": "Create Feed",
+            "url": "http://localhost:8000/v1/feeds",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-09-15T12:12:20.319Z",
+            "modified": "2024-09-15T17:05:32.955Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "ApiKey cc068039c38fe166dae901f86e5459d8314a90e95a9b2dfc28821968415c44cd"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"About Harsha Dannina\",\n  \"url\": \"https://harshadannina.com/about\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "3feaac35-2d2b-407a-aca8-2b89d7eb9c55",
+            "colId": "642a454e-1e54-41a1-b5bb-a1bed9c2e306",
+            "containerId": "",
+            "name": "Get Feeds",
+            "url": "http://localhost:8000/v1/feeds",
+            "method": "GET",
+            "sortNum": 35000,
+            "created": "2024-09-15T13:09:52.797Z",
+            "modified": "2024-09-15T13:10:17.024Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "ApiKey cc068039c38fe166dae901f86e5459d8314a90e95a9b2dfc28821968415c44cd",
+                    "isDisabled": true
+                }
+            ]
+        },
+        {
+            "_id": "d240fd74-f8d8-4a97-ab6d-323219621b8e",
+            "colId": "642a454e-1e54-41a1-b5bb-a1bed9c2e306",
+            "containerId": "",
+            "name": "Create Feed Follow",
+            "url": "http://localhost:8000/v1/feed_follow",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2024-09-15T13:10:43.578Z",
+            "modified": "2024-09-15T17:06:48.334Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "ApiKey e56f8b180178e271c58777e150997dfb2f756382f1cb5651914cd3a04517c427"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"feed_id\": \"6a4a1262-cc93-4a92-a9b0-6af42e2bf7ac\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "d4864c6d-958e-443f-a6d0-804c6433a9d9",
+            "colId": "642a454e-1e54-41a1-b5bb-a1bed9c2e306",
+            "containerId": "",
+            "name": "Delete Feeds",
+            "url": "http://localhost:8000/v1/feeds/de0c6eb3-f762-48f9-b78b-a0acd2a70e17",
+            "method": "DELETE",
+            "sortNum": 45000,
+            "created": "2024-09-15T17:03:09.166Z",
+            "modified": "2024-09-15T17:03:56.319Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "ApiKey cc068039c38fe166dae901f86e5459d8314a90e95a9b2dfc28821968415c44cd"
+                }
+            ]
+        },
+        {
+            "_id": "b0577a43-5251-4651-b0d7-acf0e02c3355",
+            "colId": "642a454e-1e54-41a1-b5bb-a1bed9c2e306",
+            "containerId": "",
+            "name": "Get Feed Follows",
+            "url": "http://localhost:8000/v1/feed_follow",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2024-09-15T17:00:49.915Z",
+            "modified": "2024-09-15T17:06:17.976Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "ApiKey e56f8b180178e271c58777e150997dfb2f756382f1cb5651914cd3a04517c427"
+                }
+            ]
+        },
+        {
+            "_id": "f94f2cc9-2686-4769-9191-74f843b58ec6",
+            "colId": "642a454e-1e54-41a1-b5bb-a1bed9c2e306",
+            "containerId": "",
+            "name": "Delete Feed Follows ",
+            "url": "http://localhost:8000/v1/feed_follow/443d1caf-1729-4586-a254-7c6ec4728df3",
+            "method": "DELETE",
+            "sortNum": 60000,
+            "created": "2024-09-15T17:01:52.569Z",
+            "modified": "2024-09-15T17:07:36.638Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "ApiKey e56f8b180178e271c58777e150997dfb2f756382f1cb5651914cd3a04517c427"
+                }
+            ]
+        }
+    ],
+    "ref": "8SYai31rS7ksZhsT4T1wpEKi5HBBFuNlbSPWeucG-Xcu6dLg8wBCd_e6WcFoqudvyqLqoP2C3qBZiSFCTNtPqA"
+}
